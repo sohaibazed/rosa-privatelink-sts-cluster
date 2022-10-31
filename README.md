@@ -17,14 +17,17 @@ Using the code in the repo will require having the following tools installed:
 Additionally, Terraform repos often have a local variables file (`terraform.tfvars`) that is **not** committed to the repo because it will often have creds or API keys in it. For this repo, it's quite simple:
 
 ```hcl
-
 cat << EOF > terraform.auto.tfvars
-cluster_name = "rosa-test"
+cluster_name = "test-cluster"
 compute_nodes = "3"  # Set to 3 for HA, 2 for single-AZ
-offline_access_token = "*******************" # Get from https://console.redhat.com/openshift/token/rosa/show 
+offline_access_token = "*********************" # Get from https://console.redhat.com/openshift/token/rosa/show
 rosa_version = "openshift-v4.11.9" # Needs to be a supported version by ROSA
 aws_region           = "us-east-2" # Optional, only if you're not selecting us-west-2 region
 availability_zones   = ["us-east-2a", "us-east-2b", "us-east-2c"] # Optional, only if you're not selecting us-west-2 region
+
+
+htpasswd_username = "kubeadmin"
+htpasswd_password = "*********"
 EOF
 ```
 
@@ -43,23 +46,6 @@ EOF
    terraform init
    ```
 
-### Public ROSA Cluster in STS mode
-
-> Note: this is the default behavior for the Terraform code and will result in a public ROSA cluster in STS mode.
-
-1. Check for any variables in `vars.tf` that you want to change such as the cluster name.
-
-1. Plan the Terraform configuration
-
-   ```bash
-   terraform plan -out rosa.plan
-   ```
-
-1. Apply the Terraform plan
-
-   ```bash
-   terraform apply rosa.plan
-   ```
 
 ### Private-Link ROSA Cluster in STS mode
 
