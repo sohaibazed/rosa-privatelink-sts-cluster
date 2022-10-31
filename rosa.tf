@@ -66,7 +66,7 @@ resource "ocm_cluster" "rosa_cluster" {
   properties = {
     rosa_creator_arn = data.aws_caller_identity.current.arn
   }
-  wait = var.enable_sts ? false : true
+  wait = true 
   sts  = var.enable_sts ? local.sts_roles : null
   depends_on = [
     module.rosa-vpc
