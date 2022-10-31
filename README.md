@@ -1,7 +1,5 @@
 # Using Terraform with ROSA Bring-your-own-VPC
 
-The use of Terraform to manage the lifecycle of cloud resources is an extremely common pattern, and has led to a number of customer questions around "How can I manage ROSA with Terraform?"
-
 This repo contains a working example of how to use Terraform to provision a ROSA cluster on a customer-provided VPC using an unsupported TF provider.
 
 ## Prerequisites
@@ -66,15 +64,3 @@ EOF
    ```bash
    terraform apply rosa.plan
    ```
-
-## Further reading
-
-Creating a VPC via Terraform can be done by provisioning individual resources (this example creates 29 separate ones), but AWS provides a [very useful and well-supported Terraform module](https://registry.terraform.io/modules/terraform-aws-modules/vpc/aws/latest) for creating VPCs that requires only a few values to be set and handles the heavy lifting. This module is called in the `vpc.tf` file.
-
-For complex Private-Link scenarios including Transit Gateways we have a [terraform module](https://registry.terraform.io/modules/rh-mobb/rosa-privatelink-vpc/aws/latest) that can be used to assist in creating a VPC with Private-Link.
-
-The VPC for this example follows the AWS "private" reference architecture:
-
-- Spread across three availability zones
-- Three private subnets to house compute resources
-- Three public subnets to support exposing services via load balancer(s)
