@@ -66,7 +66,7 @@ resource "ocm_cluster" "rosa_cluster" {
   properties = {
     rosa_creator_arn = data.aws_caller_identity.current.arn
   }
-  wait = true 
+  wait = false
   sts  = var.enable_sts ? local.sts_roles : null
   depends_on = [
     module.rosa-vpc
@@ -97,4 +97,10 @@ resource "ocm_identity_provider" "rosa_iam_htpasswd" {
 	username = var.htpasswd_username
    	password = var.htpasswd_password
    }
+}
+
+resource "ocm_group_membership" "htpasswd_admin" {
+  cluster = ocm_cluster.rosa_cluster.id
+  group   = "cluster-admins"
+  user    = var.htpasswd_username
 }
