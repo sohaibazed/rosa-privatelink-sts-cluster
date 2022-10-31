@@ -104,3 +104,19 @@ resource "ocm_group_membership" "htpasswd_admin" {
   group   = "cluster-admins"
   user    = var.htpasswd_username
 }
+
+resource "ocm_identity_provider" "oidc" {
+  cluster = ocm_cluster.rosa_cluster.id
+  name    = "openid"
+  openid = {
+    issuer        = "****"
+    client_id     = "****"
+    client_secret = "****"
+    extra_scopes  = ["email", "profile"]
+    claims = {
+      email              = ["email"]
+      name               = ["name", "email"]
+      preferred_username = ["preferred_username", "email"]
+    }
+  }
+} 
