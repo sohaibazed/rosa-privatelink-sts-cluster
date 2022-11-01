@@ -1,6 +1,6 @@
 # Using Terraform with ROSA Bring-your-own-VPC
 
-This repo contains a working example of how to use Terraform to provision a ROSA cluster on a customer-provided VPC using an unsupported TF provider.
+This repo contains a working example of how to use Terraform to provision a public ROSA cluster.
 
 ## Prerequisites
 
@@ -45,18 +45,16 @@ EOF
    ```
 
 
-### Private-Link ROSA Cluster in STS mode
+### Public ROSA Cluster in STS mode
 
-> This will create a Private-Link ROSA cluster in STS mode, it will use a public subnet for egress traffic (Nat GW / Internet Gateway) and a private subnet for the cluster itself and its ingress (API, default route, etc).
+> This will create a Public ROSA cluster in STS mode, it will use a public subnet for egress traffic (Nat GW / Internet Gateway) and a private subnet for the cluster itself and its ingress (API, default route, etc).
 
 1. Check for any variables in `vars.tf` that you want to change such as the cluster name.
 
 1. Plan the Terraform configuration
 
-   > Note: You can set the `enable_private_link` variable in your `.tfvars` if you prefer.
-
    ```bash
-   terraform plan -var "enable_private_link=true" -out rosa.plan
+   terraform plan -out rosa.plan
    ```
 
 1. Apply the Terraform plan

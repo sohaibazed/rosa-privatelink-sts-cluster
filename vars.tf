@@ -9,24 +9,8 @@ variable "cluster_name" {
   default     = "rosa-cluster"
 }
 
-# variable "network_type" {
-#         type = string
-#         validation {
-#             condition = contains(["public", "private"], var.network_type)
-#             error_message = "Network type must be one of [public,private]"
-#         }
-# }
 
-# variable "ocp_version" {
-#     type = string
-#     description = "The version of ROSA to be deployed"
-# }
 
-# variable "external_id" {
-#     type = string
-#     description = "Optional external ID to link to ROSA cluster"
-#     default = ""
-# }
 
 variable "rosa_version" {
   type        = string
@@ -57,6 +41,11 @@ variable "offline_access_token" {
   description = "The OCM API access token for your account"
 }
 
+variable "multi_az" {
+  type        =  bool
+  description = "Deploy cluster to multiple availability zones?"
+  default     = true
+}
 variable "availability_zones" {
   type        = list(any)
   description = "The availability zones to use for the cluster"
@@ -67,24 +56,6 @@ variable "machine_cidr_block" {
   type        = string
   description = "value of the CIDR block to use for the VPC"
   default     = "10.66.0.0/16"
-}
-
-variable "private_subnet_cidrs" {
-  type        = list(any)
-  description = "The CIDR blocks to use for the private subnets"
-  default     = ["10.66.1.0/24", "10.66.2.0/24", "10.66.3.0/24"]
-}
-
-variable "public_subnet_cidrs" {
-  type        = list(any)
-  description = "The CIDR blocks to use for the public subnets"
-  default     = ["10.66.101.0/24", "10.66.102.0/24", "10.66.103.0/24"]
-}
-
-variable "enable_private_link" {
-  type        = bool
-  description = "This enables private link"
-  default     = false
 }
 
 variable "enable_sts" {
