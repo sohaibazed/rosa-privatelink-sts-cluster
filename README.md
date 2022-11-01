@@ -47,17 +47,17 @@ EOF
 
 ### Public ROSA Cluster in STS mode
 
-> This will create a Public ROSA cluster in STS mode, it will use a public subnet for egress traffic (Nat GW / Internet Gateway) and a private subnet for the cluster itself and its ingress (API, default route, etc).
+This will create a Public ROSA cluster in STS mode, it will use a public subnet for egress traffic (Nat GW / Internet Gateway) and a private subnet for the cluster itself and its ingress (API, default route, etc).
 
 1. Check for any variables in `vars.tf` that you want to change such as the cluster name.
 
-1. Plan the Terraform configuration
+2. Plan the Terraform configuration
 
    ```bash
    terraform plan -out rosa.plan
    ```
 
-1. Apply the Terraform plan
+3. Apply the Terraform plan
 
    ```bash
    terraform apply rosa.plan
