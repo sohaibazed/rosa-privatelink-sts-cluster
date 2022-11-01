@@ -56,21 +56,21 @@ resource "ocm_cluster" "rosa_cluster" {
   cloud_region   = var.aws_region
   compute_nodes  = var.compute_nodes
   aws_account_id = data.aws_caller_identity.current.account_id
-  aws_subnet_ids = var.enable_private_link ? module.rosa-vpc.private_subnets : concat(module.rosa-vpc.private_subnets, module.rosa-vpc.public_subnets)
+  #aws_subnet_ids = var.enable_private_link ? module.rosa-vpc.private_subnets : concat(module.rosa-vpc.private_subnets, module.rosa-vpc.public_subnets)
   # aws_subnet_ids     = concat(module.rosa-vpc.private_subnets, module.rosa-vpc.public_subnets)
-  machine_cidr     = module.rosa-vpc.vpc_cidr_block
-  aws_private_link = var.enable_private_link
-  # aws_private_link   = false
-  multi_az           = length(module.rosa-vpc.private_subnets) == 3 ? true : false
+  machine_cidr     = var.machine_cidr_block
+  #aws_private_link = var.enable_private_link
+  aws_private_link   = false
+  multi_az           = var.multi_az
   availability_zones = var.availability_zones
   properties = {
     rosa_creator_arn = data.aws_caller_identity.current.arn
   }
   wait = false
   sts  = var.enable_sts ? local.sts_roles : null
-  depends_on = [
-    module.rosa-vpc
-  ]
+#  depends_on = [
+#    module.rosa-vpc
+#  ]
   # aws_access_key_id     = local.aws_access_key_id
   # aws_secret_access_key = local.aws_secret_access_key
   aws_access_key_id     = var.enable_sts ? (length(aws_iam_access_key.admin_key) > 0 ? aws_iam_access_key.admin_key[0].id : null) : null
@@ -105,18 +105,18 @@ resource "ocm_group_membership" "htpasswd_admin" {
   user    = var.htpasswd_username
 }
 
-resource "ocm_identity_provider" "oidc" {
-  cluster = ocm_cluster.rosa_cluster.id
-  name    = "openid"
-  openid = {
-    issuer        = "****"
-    client_id     = "****"
-    client_secret = "****"
-    extra_scopes  = ["email", "profile"]
-    claims = {
-      email              = ["email"]
-      name               = ["name", "email"]
-      preferred_username = ["preferred_username", "email"]
-    }
-  }
-} 
+#resource "ocm_identity_provider" "oidc" {
+#  cluster = ocm_cluster.rosa_cluster.id
+#  name    = "openid"
+#  openid = {
+#    issuer        = "****"
+#    client_id     = "****"
+#    client_secret = "****"
+#    extra_scopes  = ["email", "profile"]
+#    claims = {
+#      email              = ["email"]
+#      name               = ["name", "email"]
+#      preferred_username = ["preferred_username", "email"]
+#    }
+#  }
+#} 
