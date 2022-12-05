@@ -66,13 +66,7 @@ resource "ocm_cluster" "rosa_cluster" {
   properties = {
     rosa_creator_arn = data.aws_caller_identity.current.arn
   }
-  wait = false
   sts  = var.enable_sts ? local.sts_roles : null
-#  depends_on = [
-#    module.rosa-vpc
-#  ]
-  # aws_access_key_id     = local.aws_access_key_id
-  # aws_secret_access_key = local.aws_secret_access_key
   aws_access_key_id     = var.enable_sts ? (length(aws_iam_access_key.admin_key) > 0 ? aws_iam_access_key.admin_key[0].id : null) : null
   aws_secret_access_key = var.enable_sts ? (length(aws_iam_access_key.admin_key) > 0 ? aws_iam_access_key.admin_key[0].secret : null) : null
   lifecycle {
@@ -90,6 +84,10 @@ module "sts_roles" {
   }]
 }
 
+resource "ocm_cluster_wait" "rosa_cluster_wait" {
+  cluster = ocm_cluster.rosa_cluster.id
+}
+
 resource "ocm_identity_provider" "rosa_iam_htpasswd" {
    cluster = ocm_cluster.rosa_cluster.id
    name = "htpasswd"
@@ -97,12 +95,18 @@ resource "ocm_identity_provider" "rosa_iam_htpasswd" {
 	username = var.htpasswd_username
    	password = var.htpasswd_password
    }
+   depends_on = [
+     ocm_cluster_wait.rosa_cluster_wait
+   ]
 }
 
 resource "ocm_group_membership" "htpasswd_admin" {
   cluster = ocm_cluster.rosa_cluster.id
   group   = "cluster-admins"
   user    = var.htpasswd_username
+  depends_on = [
+    ocm_cluster_wait.rosa_cluster_wait
+  ]
 }
 
 #resource "ocm_identity_provider" "oidc" {
