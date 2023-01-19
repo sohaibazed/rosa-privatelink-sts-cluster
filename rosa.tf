@@ -63,6 +63,7 @@ resource "ocm_cluster" "rosa_cluster" {
   aws_private_link   = false
   multi_az           = var.multi_az
   availability_zones = var.availability_zones
+  wait = false
   properties = {
     rosa_creator_arn = data.aws_caller_identity.current.arn
   }
